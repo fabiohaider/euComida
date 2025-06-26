@@ -42,6 +42,7 @@ Execute:
 
 ```bash
 git clone https://github.com/fabiohaider/euComida.git
+cd euComida
 ./start-and-wait.sh
 ./access-summary.sh
 ```

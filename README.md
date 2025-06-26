@@ -1,6 +1,6 @@
-# euComida - Backend do desafio GeoSapiens
+# euComida 
 
-Este projeto implementa o backend de um sistema de delivery inspirado no iFood, como parte do desafio técnico da GeoSapiens.
+Este projeto implementa o backend de um sistema de delivery inspirado no iFood.
 
 ---
 

@@ -1,0 +1,22 @@
+_format_version: "3.0"
+
+services:
+  - name: pedido-service-upstream
+    url: http://pedido-service:8081
+
+routes:
+  - name: rota-criar-pedido
+    service: pedido-service-upstream
+    paths:
+      - /api/v1/pedidos
+    methods:
+      - POST
+    strip_path: false
+
+  - name: rota-status-pedido
+    service: pedido-service-upstream
+    paths:
+      - ~/api/v1/pedidos/.+/status
+    methods:
+      - GET
+    strip_path: false

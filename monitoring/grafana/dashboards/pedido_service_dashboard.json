@@ -1,0 +1,622 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "id": 2,
+      "title": "Requisições por Segundo (RPS)",
+      "type": "stat",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 0 },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [ "lastNotNull" ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_count{job=\"pedido-service\", uri=~\"$uri\", status=~\"$status\"}[5m]))",
+          "legendFormat": "RPS",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 80 }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 4,
+      "title": "Taxa de Erros (5xx)",
+      "type": "stat",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 0 },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [ "lastNotNull" ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_count{job=\"pedido-service\", status=~\"500\", uri=\"/pedidos\"}[5m])) / sum(rate(http_server_requests_seconds_count{job=\"pedido-service\", uri=\"/pedidos\"}[5m])) * 100",
+          "legendFormat": "Taxa de Erro",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 5 }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 6,
+      "title": "Latência p95",
+      "type": "stat",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 0 },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [ "lastNotNull" ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job=\"pedido-service\", uri=~\"$uri\"}[5m])) by (le))",
+          "legendFormat": "Latência p95",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 0.5 },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 20,
+      "title": "Uptime do Banco de Dados",
+      "type": "stat",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 0 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [ "lastNotNull" ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "pg_up{job=\"postgres\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [
+            {
+              "options": { "0": { "color": "red", "text": "DOWN" }, "1": { "color": "green", "text": "UP" } },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 8,
+      "title": "Taxa de Requisições por Endpoint",
+      "type": "timeseries",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 5 },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_count{job=\"pedido-service\", uri=~\"$uri\", status=~\"$status\"}[5m])) by (uri, status)",
+          "legendFormat": "{{uri}} - {{status}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "reqps" } }
+    },
+    {
+      "id": 10,
+      "title": "Latência por Endpoint (p95)",
+      "type": "timeseries",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 14 },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{job=\"pedido-service\", uri=~\"$uri\"}[5m])) by (le, uri))",
+          "legendFormat": "{{uri}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 23 },
+      "id": 22,
+      "panels": [],
+      "title": "Métricas da JVM",
+      "type": "row"
+    },
+    {
+      "id": 12,
+      "title": "Uso de Memória Heap (JVM)",
+      "type": "timeseries",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "jvm_memory_used_bytes{job=\"pedido-service\", area=\"heap\"}",
+          "legendFormat": "Usada",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "jvm_memory_committed_bytes{job=\"pedido-service\", area=\"heap\"}",
+          "legendFormat": "Alocada (Committed)",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "jvm_memory_max_bytes{job=\"pedido-service\", area=\"heap\"}",
+          "legendFormat": "Máxima",
+          "refId": "C"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "id": 14,
+      "title": "Uso de CPU (JVM)",
+      "type": "timeseries",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "rate(process_cpu_seconds_total{job=\"postgres\"}[5m]) * 100",
+          "legendFormat": "Uso de CPU",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "max": 100, "unit": "percent" },
+        "overrides": []
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 32 },
+      "id": 24,
+      "panels": [],
+      "title": "Métricas do PostgreSQL",
+      "type": "row"
+    },
+    {
+      "id": 16,
+      "title": "Conexões Ativas no Banco",
+      "type": "timeseries",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 33 },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "sum(pg_stat_activity_count{datname=~\"eucomida\"}) by (state)",
+          "legendFormat": "{{state}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short" } }
+    },
+    {
+      "id": 18,
+      "title": "Taxa de Cache Hit do Banco",
+      "type": "timeseries",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 33 },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "sum(rate(pg_stat_database_blks_hit{datname=~\"eucomida\"}[5m])) / (sum(rate(pg_stat_database_blks_hit{datname=~\"eucomida\"}[5m])) + sum(rate(pg_stat_database_blks_read{datname=~\"eucomida\"}[5m]))) * 100",
+          "legendFormat": "Cache Hit %",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "max": 100, "unit": "percent" },
+        "overrides": []
+      }
+    },
+    {
+      "id": 26,
+      "title": "Transações por Segundo",
+      "type": "timeseries",
+      "datasource": {
+        "type": "Prometheus",
+        "uid": "Prometheus"
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 33 },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "rate(pg_stat_database_xact_commit{datname=~\"eucomida\"}[5m])",
+          "legendFormat": "Commits",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "Prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "rate(pg_stat_database_xact_rollback{datname=~\"eucomida\"}[5m])",
+          "legendFormat": "Rollbacks",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "tps" } }
+    }
+  ],
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [ "pedido-service", "fullstack" ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "pedido-service",
+          "value": "pedido-service"
+        },
+        "datasource": {
+          "type": "Prometheus",
+          "uid": "Prometheus"
+        },
+        "definition": "label_values(up, job)",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "job",
+        "options": [],
+        "query": {
+          "query": "label_values(up, job)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": [ "$__all" ]
+        },
+        "datasource": {
+          "type": "Prometheus",
+          "uid": "Prometheus"
+        },
+        "definition": "label_values(http_server_requests_seconds_count{job=\"pedido-service\"}, uri)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "uri",
+        "options": [],
+        "query": {
+          "query": "label_values(http_server_requests_seconds_count{job=\"pedido-service\"}, uri)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": [ "$__all" ]
+        },
+        "datasource": {
+          "type": "Prometheus",
+          "uid": "Prometheus"
+        },
+        "definition": "label_values(http_server_requests_seconds_count{job=\"pedido-service\"}, status)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "status",
+        "options": [],
+        "query": {
+          "query": "label_values(http_server_requests_seconds_count{job=\"pedido-service\"}, status)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "eucomida",
+          "value": "eucomida"
+        },
+        "datasource": {
+          "type": "Prometheus",
+          "uid": "Prometheus"
+        },
+        "definition": "label_values(pg_up, datname)",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "db",
+        "options": [],
+        "query": {
+          "query": "label_values(pg_up, datname)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Visão Geral de Performance: Pedido Service & PostgreSQL",
+  "uid": "pedido-service-full-overview",
+  "version": 1,
+  "weekStart": ""
+}

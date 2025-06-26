@@ -1,0 +1,55 @@
+{
+  "realm": "eucomida",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      { "name": "user" },
+      { "name": "entregador" }
+    ]
+  },
+  "users": [
+    {
+      "username": "cliente1",
+      "enabled": true,
+      "email": "cliente1@eucomida.com",
+      "emailVerified": true,
+      "firstName": "Cliente",
+      "lastName": "Um",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "cliente123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["user"]
+    },
+    {
+      "username": "entregador1",
+      "enabled": true,
+      "email": "entregador1@eucomida.com",
+      "emailVerified": true,
+      "firstName": "Entregador",
+      "lastName": "Um",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "entregador123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["entregador"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "pedido-service",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "redirectUris": ["*"]
+    }
+  ]
+}

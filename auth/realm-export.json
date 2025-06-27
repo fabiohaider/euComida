@@ -39,6 +39,27 @@
         }
       ],
       "realmRoles": ["entregador"]
+    },
+    {
+      "username": "cliente2",
+      "enabled": true,
+      "email": "cliente2@eucomida.com",
+      "emailVerified": true,
+      "firstName": "Cliente",
+      "lastName": "Dois",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "cliente123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "user"
+      ],
+      "requiredActions": [
+        "CONFIGURE_OTP"
+      ]
     }
   ],
   "clients": [

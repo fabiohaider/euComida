@@ -31,53 +31,16 @@ services:
     depends_on:
       - db
 
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:24.0
-#    container_name: keycloak
-#    command: start-dev --import-realm
-#    environment:
-#      KC_HOSTNAME_URL: http://localhost:8080
-#      KC_HOSTNAME_ADMIN_URL: http://localhost:8080
-#      KC_HTTP_PORT: 8080
-#      KC_HOSTNAME_STRICT: false
-#      KC_HTTP_ENABLED: true
-#      KEYCLOAK_ADMIN: admin
-#      KEYCLOAK_ADMIN_PASSWORD: admin
-#      KC_DB: postgres
-#      KC_DB_URL: jdbc:postgresql://db:5432/eucomida
-#      KC_DB_USERNAME: postgres
-#      KC_DB_PASSWORD: postgres
-#    volumes:
-#      - ./auth/realm-export.json:/opt/keycloak/data/import/realm-export.json
-#    ports:
-#      - "8080:8080"
-#    networks:
-#      - eucomida-net
-#    depends_on:
-#      - db
-
   keycloak:
     image: quay.io/keycloak/keycloak:24.0
     container_name: keycloak
-    command: >
-      start-dev
-      --http-port=8080
-      --hostname-strict=false
-      --hostname-strict-https=false
-      --hostname-url=http://localhost:8080
-      --hostname-admin-url=http://localhost:8080
-      --proxy=edge
-      --import-realm
-#    command: start-dev --import-realm
+    command: start-dev --import-realm
     environment:
-#      KC_HOSTNAME_URL: http://localhost:8080
-#      KC_HOSTNAME_ADMIN_URL: http://localhost:8080
-#      KC_PROXY: edge                 # Diz ao Keycloak que ele está atrás de um proxy (o Docker)
-#      KC_HOSTNAME: localhost           # O hostname PÚBLICO que seu navegador usa para acessar
-#      KC_HTTP_PORT: 8080
-#      KC_HOSTNAME_STRICT: false
-#      KC_HOSTNAME_STRICT_HTTPS: false
-#      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_URL: http://keycloak:8080
+      KC_HOSTNAME_ADMIN_URL: http://keycloak:8080
+      KC_HTTP_PORT: 8080
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: true
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_DB: postgres
@@ -92,36 +55,6 @@ services:
       - eucomida-net
     depends_on:
       - db
-
-
-
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:25.0.2
-#    container_name: keycloak
-#    command: start-dev --import-realm
-#    environment:
-#      - KEYCLOAK_ADMIN=admin
-#      - KEYCLOAK_ADMIN_PASSWORD=admin
-#      - KC_PROXY=edge                 # Diz ao Keycloak que ele está atrás de um proxy (o Docker)
-#      - KC_HOSTNAME=localhost           # O hostname PÚBLICO que seu navegador usa para acessar
-#      - KC_HOSTNAME_PORT=8080           # A porta PÚBLICA
-#      - KC_HTTP_ENABLED=true            # Garante que o HTTP esteja habilitado
-#      - KC_HOSTNAME_STRICT_HTTPS=false  # Desabilita a exigência de HTTPS para desenvolvimento local
-#    volumes:
-#      - ./keycloak/imports:/opt/keycloak/data/import
-#    ports:
-#      - "8080:8080"
-#    healthcheck:
-#      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 10
-#    networks:
-#      - eucomida-net
-
-
-
-
 
   kong:
     image: kong/kong-gateway:3.9

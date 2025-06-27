@@ -11,7 +11,7 @@ wait_for_service() {
     local check_command=$2
 
     echo -n "⏳ Aguardando o serviço '$service_name' ficar pronto..."
-    # O comando eval é usado para executar o comando de verificação passado como string
+    #  O comando eval é usado para executar o comando de verificação passado como string
     while ! eval "$check_command"; do
         echo -n "."
         sleep 2

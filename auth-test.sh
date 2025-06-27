@@ -77,4 +77,4 @@ fi
 echo "✅ Status consultado com sucesso!"
 echo "   Resposta (Status): $HTTP_BODY_GET"
 echo ""
-echo -e "\033[1;32m🎉 Script de teste de fluxo completo finalizado com sucesso!\033[0m"
+echo -e "\033[1;32m🎉  Script de teste de fluxo completo finalizado com sucesso!\033[0m"

@@ -31,7 +31,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/actuator/prometheus", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/pedidos").hasAuthority("ROLE_user")
                         .requestMatchers(HttpMethod.GET, "/pedidos/{id}/status").hasAnyAuthority("ROLE_user", "ROLE_entregador")
                         .anyRequest().authenticated()

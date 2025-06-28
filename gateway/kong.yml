@@ -2,7 +2,7 @@ _format_version: "3.0"
 
 services:
   - name: pedido-service-upstream
-    url: http://pedido-service:8081
+    url: http://localhost:8081
 
 routes:
   - name: rota-criar-pedido

@@ -11,8 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks:
-      - eucomida-net
+    network_mode: host
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
@@ -23,11 +22,10 @@ services:
     image: prometheuscommunity/postgres-exporter
     container_name: postgres-exporter
     environment:
-      DATA_SOURCE_NAME: "postgresql://postgres:postgres@db:5432/eucomida?sslmode=disable"
+      DATA_SOURCE_NAME: "postgresql://postgres:postgres@localhost:5432/eucomida?sslmode=disable"
     ports:
       - "9187:9187"
-    networks:
-      - eucomida-net
+    network_mode: host
     depends_on:
       - db
 
@@ -36,25 +34,48 @@ services:
     container_name: keycloak
     command: start-dev --import-realm
     environment:
-      KC_HOSTNAME_URL: http://keycloak:8080
-      KC_HOSTNAME_ADMIN_URL: http://keycloak:8080
-      KC_HTTP_PORT: 8080
       KC_HOSTNAME_STRICT: false
-      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_HTTPS: false
+#      KC_HOSTNAME: "localhost"
+      KC_HOSTNAME_URL: http://localhost:8080
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://db:5432/eucomida
+      KC_DB_URL: jdbc:postgresql://localhost:5432/eucomida
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: postgres
     volumes:
       - ./auth/realm-export.json:/opt/keycloak/data/import/realm-export.json
     ports:
       - "8080:8080"
-    networks:
-      - eucomida-net
+    network_mode: host
     depends_on:
       - db
+
+#  keycloak:
+#    image: quay.io/keycloak/keycloak:24.0
+#    container_name: keycloak
+#    command: start-dev --import-realm
+#    environment:
+#      KC_HOSTNAME_URL: http://keycloak:8080
+#      KC_HOSTNAME_ADMIN_URL: http://keycloak:8080
+#      KC_HTTP_PORT: 8080
+#      KC_HOSTNAME_STRICT: false
+#      KC_HTTP_ENABLED: true
+#      KEYCLOAK_ADMIN: admin
+#      KEYCLOAK_ADMIN_PASSWORD: admin
+#      KC_DB: postgres
+#      KC_DB_URL: jdbc:postgresql://db:5432/eucomida
+#      KC_DB_USERNAME: postgres
+#      KC_DB_PASSWORD: postgres
+#    volumes:
+#      - ./auth/realm-export.json:/opt/keycloak/data/import/realm-export.json
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - eucomida-net
+#    depends_on:
+#      - db
 
   kong:
     image: kong/kong-gateway:3.9
@@ -71,8 +92,7 @@ services:
     ports:
       - "8000:8000"
       - "8001:8001"
-    networks:
-      - eucomida-net
+    network_mode: host
     volumes:
       - ./gateway/kong.yml:/usr/local/kong/declarative/kong.yml
 
@@ -83,8 +103,7 @@ services:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-    networks:
-      - eucomida-net
+    network_mode: host
     depends_on:
       - pedido-service
       - postgres-exporter
@@ -101,8 +120,7 @@ services:
     ports:
       - "4317:4317"
       - "4318:4318"
-    networks:
-      - eucomida-net
+    network_mode: host
     depends_on:
       - loki
 
@@ -112,8 +130,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     ports:
       - "3100:3100"
-    networks:
-      - eucomida-net
+    network_mode: host
 
   grafana:
     image: grafana/grafana
@@ -131,8 +148,7 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
-    networks:
-      - eucomida-net
+    network_mode: host
     restart: unless-stopped
     depends_on:
       - prometheus
@@ -146,17 +162,14 @@ services:
       - KEYCLOAK_AUTH_URL=http://localhost:8080
       - KEYCLOAK_REALM=eucomida
       - OTEL_SERVICE_NAME=pedido-service
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
     ports:
       - "8081:8081"
-    networks:
-      - eucomida-net
+    network_mode: host
 
 volumes:
   grafana-data:
   pgdata:
   opensearch-data:
 
-networks:
-  eucomida-net:
-    driver: bridge
+

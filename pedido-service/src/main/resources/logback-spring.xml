@@ -1,6 +1,6 @@
 <configuration>
   <appender name="OTLP" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OtlpAppender">
-    <setEndpoint>http://otel-collector:4317</setEndpoint>
+    <setEndpoint>http://localhost:4317</setEndpoint>
     <setJsonMode>true</setJsonMode>
   </appender>
 

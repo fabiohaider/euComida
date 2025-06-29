@@ -7,6 +7,19 @@ e adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [1.0.2] - 2025-06-28
+### Adicionado
+- Suporte a autenticação 2FA (dois fatores) usando OTP (One-Time Password) integrado ao Keycloak.
+- Fluxo de autenticação configurado com `Browser - Conditional OTP` e `auth-otp-form`.
+- Usuário `cliente2` exigido a registrar 2FA na primeira autenticação (ação requerida `CONFIGURE_OTP`).
+- Validação de código TOTP via aplicativo autenticador (ex: Google Authenticator, Authy).
+
+### Alterado
+- Atualização do fluxo `browser` no Keycloak para condicionar o uso de OTP apenas a usuários com 2FA ativo.
+
+
+---
+
 ## [1.0.1] - 2025-06-27
 ### Adicionado
 - Exposição da versão da aplicação via endpoint `/actuator/info`

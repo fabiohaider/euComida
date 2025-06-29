@@ -1,16 +1,17 @@
 {
   "info": {
-    "_postman_id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
-    "name": "euComida API - v2 Corrigida",
+    "_postman_id": "a18e01dc-229d-4ead-80a6-350347f5fe24",
+    "name": "euComida API - v1",
     "description": "Coleção para testar o fluxo completo da API euComida, incluindo autenticação com Keycloak e operações de pedido.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "3474068"
   },
   "item": [
     {
       "name": "1. Autenticação",
       "item": [
         {
-          "name": "Obter Token de Acesso",
+          "name": "Obter Token de Acesso - user/passwd",
           "event": [
             {
               "listen": "test",
@@ -41,18 +42,112 @@
             "body": {
               "mode": "urlencoded",
               "urlencoded": [
-                { "key": "grant_type", "value": "password" },
-                { "key": "client_id", "value": "pedido-service" },
-                { "key": "username", "value": "cliente1" },
-                { "key": "password", "value": "cliente123" }
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                },
+                {
+                  "key": "client_id",
+                  "value": "pedido-service"
+                },
+                {
+                  "key": "username",
+                  "value": "cliente1"
+                },
+                {
+                  "key": "password",
+                  "value": "cliente123"
+                }
               ]
             },
             "url": {
               "raw": "http://localhost:8080/realms/eucomida/protocol/openid-connect/token",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8080",
-              "path": ["realms", "eucomida", "protocol", "openid-connect", "token"]
+              "path": [
+                "realms",
+                "eucomida",
+                "protocol",
+                "openid-connect",
+                "token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obter Token de Acesso - 2FA",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access_token) {",
+                  "    pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+                  "    console.log(\"Token de acesso salvo na variável 'access_token' da coleção.\");",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                },
+                {
+                  "key": "client_id",
+                  "value": "pedido-service"
+                },
+                {
+                  "key": "username",
+                  "value": "cliente2"
+                },
+                {
+                  "key": "password",
+                  "value": "cliente123"
+                },
+                {
+                  "key": "totp",
+                  "value": "857784",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/realms/eucomida/protocol/openid-connect/token",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "realms",
+                "eucomida",
+                "protocol",
+                "openid-connect",
+                "token"
+              ]
             }
           },
           "response": []
@@ -87,12 +182,19 @@
             "auth": {
               "type": "bearer",
               "bearer": [
-                { "key": "token", "value": "{{access_token}}", "type": "string" }
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
               ]
             },
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -101,9 +203,15 @@
             "url": {
               "raw": "http://localhost:8000/api/v1/pedidos",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8000",
-              "path": ["api", "v1", "pedidos"]
+              "path": [
+                "api",
+                "v1",
+                "pedidos"
+              ]
             }
           },
           "response": []
@@ -114,7 +222,11 @@
             "auth": {
               "type": "bearer",
               "bearer": [
-                { "key": "token", "value": "{{access_token}}", "type": "string" }
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
               ]
             },
             "method": "GET",
@@ -122,9 +234,17 @@
             "url": {
               "raw": "http://localhost:8000/api/v1/pedidos/{{pedido_id}}/status",
               "protocol": "http",
-              "host": ["localhost"],
+              "host": [
+                "localhost"
+              ],
               "port": "8000",
-              "path": ["api", "v1", "pedidos", "{{pedido_id}}", "status"]
+              "path": [
+                "api",
+                "v1",
+                "pedidos",
+                "{{pedido_id}}",
+                "status"
+              ]
             }
           },
           "response": []

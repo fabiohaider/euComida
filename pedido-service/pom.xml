@@ -6,7 +6,7 @@
     <artifactId>pedido-service</artifactId>
     <name>pedido-service</name>
     <description>Serviço de pedidos do euComida</description>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>

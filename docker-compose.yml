@@ -36,7 +36,6 @@ services:
     environment:
       KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_STRICT_HTTPS: false
-#      KC_HOSTNAME: "localhost"
       KC_HOSTNAME_URL: http://localhost:8080
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -51,31 +50,6 @@ services:
     network_mode: host
     depends_on:
       - db
-
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:24.0
-#    container_name: keycloak
-#    command: start-dev --import-realm
-#    environment:
-#      KC_HOSTNAME_URL: http://keycloak:8080
-#      KC_HOSTNAME_ADMIN_URL: http://keycloak:8080
-#      KC_HTTP_PORT: 8080
-#      KC_HOSTNAME_STRICT: false
-#      KC_HTTP_ENABLED: true
-#      KEYCLOAK_ADMIN: admin
-#      KEYCLOAK_ADMIN_PASSWORD: admin
-#      KC_DB: postgres
-#      KC_DB_URL: jdbc:postgresql://db:5432/eucomida
-#      KC_DB_USERNAME: postgres
-#      KC_DB_PASSWORD: postgres
-#    volumes:
-#      - ./auth/realm-export.json:/opt/keycloak/data/import/realm-export.json
-#    ports:
-#      - "8080:8080"
-#    networks:
-#      - eucomida-net
-#    depends_on:
-#      - db
 
   kong:
     image: kong/kong-gateway:3.9

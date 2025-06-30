@@ -94,7 +94,9 @@ Resposta: objeto `Pedido`
 ### `GET /pedidos/{id}/status`
 - Consulta o status do pedido.
 
-📎 *Exemplos `curl` incluídos no README anterior.*
+```
+http://localhost:8000/api/v1/pedidos/{{pedido_id}}/status
+```
 
 
 

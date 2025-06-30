@@ -7,6 +7,20 @@ e adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ---
 
+
+## [1.0.3] - 2025-06-30
+### Adicionado
+- Organização de toda infraestrutura Docker Compose na pasta `infra`
+- Organização dos scripts utilitários na pasta `.script`
+- Inclusão do script `stop-docker.sh` para finalizar todos os containers da infra
+- Inclusão do diagrama de solução na documentação (`README.md`)
+
+### Alterado
+- Reorganização da estrutura e clareza da documentação no `README.md`
+
+---
+
+
 ## [1.0.2] - 2025-06-28
 ### Adicionado
 - Suporte a autenticação 2FA (dois fatores) usando OTP (One-Time Password) integrado ao Keycloak.

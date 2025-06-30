@@ -1,0 +1,43 @@
+graph TD
+  subgraph Frontend
+    Browser["Usuário via Browser/Mobile"]
+  end
+
+  subgraph API Gateway
+    Kong["Kong Gateway"]
+  end
+
+  subgraph Auth
+    Keycloak["Keycloak (OAuth2 + 2FA)"]
+  end
+
+  subgraph Backend
+    PedidoService["pedido-service (Spring Boot)"]
+  end
+
+  subgraph Observabilidade
+    Prometheus["Prometheus"]
+    Grafana["Grafana"]
+    Otel["OpenTelemetry Collector"]
+    Loki["Loki Logs"]
+  end
+
+  subgraph Banco de Dados
+    Postgres["PostgreSQL"]
+    PGExporter["Postgres Exporter"]
+  end
+
+  Browser -->|HTTPS + JWT| Kong
+  Kong --> PedidoService
+  Kong -->|OAuth2| Keycloak --> |Token| Kong
+  PedidoService --> Postgres
+  PedidoService --> Otel
+  PedidoService -->|Métricas| Prometheus
+  PedidoService -->|Logs| Loki
+
+  Prometheus --> Grafana
+  Loki --> Grafana
+  PGExporter --> Prometheus
+
+  PedidoService -->|Observabilidade| Grafana
+  PedidoService -->|Traces| Otel

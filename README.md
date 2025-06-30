@@ -4,7 +4,13 @@ Este projeto implementa o backend de um sistema de delivery inspirado no iFood.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+
+[CHANGELOG](./docs/CHANGELOG/CHANGELOG.md)
+
+
+
+
+## Tecnologias Utilizadas
 
 - Java 21
 - Spring Boot 3.5
@@ -16,21 +22,21 @@ Este projeto implementa o backend de um sistema de delivery inspirado no iFood.
 - Loki (logging estruturado)
 - Docker e Docker Compose
 
----
 
-## 📦 Estrutura de Serviços
+
+## Estrutura de Serviços
 
 - `pedido-service`: Serviço de criação e consulta de pedidos
-- `auth`: Keycloak para autenticação e autorização
-- `db`: Banco de dados PostgreSQL
-- `gateway`: Kong como API Gateway
-- `grafana`: Visualização de dashboards (métricas e logs)
-- `monitoring`: Coletor de métricas OpenTelemetry e prometheus
-- `postman`: Collection configurada para chamadas ao Pedido-Service
+- `./infra/auth`: Keycloak para autenticação e autorização
+- `./infra/db`: Banco de dados PostgreSQL
+- `./infra/gateway`: Kong como API Gateway
+- `./infra/grafana`: Visualização de dashboards (métricas e logs)
+- `./infra/monitoring`: Coletor de métricas OpenTelemetry e Prometheus
+- `./script/postman`: Collection configurada para chamadas ao Pedido-Service
 
----
 
-## 🚀 Como rodar o projeto
+
+## Como rodar o projeto
 
 Pré-requisitos:
 - Linux ou Windows com WSL
@@ -43,9 +49,11 @@ Execute:
 ```bash
 git clone https://github.com/fabiohaider/euComida.git
 cd euComida
-./start-and-wait-docker.sh
-./access-summary-docker.sh
+./script/start-docker.sh
+./script/infra-docker.sh
 ```
+
+Script `./script/stop-docker.sh` encerra todos os conteiners Docker.
 
 Após a inicialização, os serviços estarão disponíveis em:
 
@@ -61,17 +69,18 @@ Após a inicialização, os serviços estarão disponíveis em:
 - otel-collector(gRPC 4317):N/A (serviço interno)
 - otel-collector(HTTP 4318): N/A (serviço interno)
 
----
 
-## 🔐 Autenticação
 
-- **Keycloak** com OAuth2 e JWT.
-- O Realm exportado está no diretório `auth/`.
-- Para obter um token de acesso, autentique-se via Keycloak e use `Authorization: Bearer <token>`.
+## Autenticação
 
----
+- Keycloak com OAuth2 e JWT.
+- O Realm exportado está no diretório `./infra/auth`
+- Usuários cliente1 e entregador1 estão configurados para autenticação user/passwd e cliente2 autenticar com 2FA
+- Para obter um token de acesso, autentique-se via Keycloak e use `Authorization: Bearer <token>`
+- Para 2FA necessita antes cadastrar OTP via url `http://localhost:8080/realms/eucomida/account` escanenando o QRCode com algum Authenticator no mobile (Google, Authenticator ...)
 
-## 📌 Endpoints da API
+
+## Endpoints da API
 
 ### `POST /pedidos`
 - Criação de um novo pedido.
@@ -87,9 +96,9 @@ Resposta: objeto `Pedido`
 
 📎 *Exemplos `curl` incluídos no README anterior.*
 
----
 
-## 🧱 Especificação da Arquitetura de Software
+
+## Especificação da Arquitetura de Software
 
 ### Arquitetura
 A arquitetura segue os princípios da **Clean Architecture** com separação em camadas de domínio, aplicação e infraestrutura.
@@ -109,30 +118,30 @@ A arquitetura segue os princípios da **Clean Architecture** com separação em 
 - Integração com Prometheus via `/actuator/prometheus`
 - OpenTelemetry com exportação automática de tracing
 
----
 
-## 📊 Monitoramento e Observabilidade
 
-### 📈 Prometheus + Grafana
+## Monitoramento e Observabilidade
+
+### Prometheus + Grafana
 - Prometheus coleta métricas via `/actuator/prometheus` para pedido-service e `/metrics` para postgres-exporter.
 - Painéis prontos no Grafana para:
   - Tráfego e latência do `pedido-service`
   - Queries e uso do PostgreSQL
   - Recursos de container (CPU, memória)
 
-### 📡 OpenTelemetry
+### OpenTelemetry
 - O `pedido-service` exporta spans automaticamente.
 - Tracing integrado com os endpoints REST.
 - Integração futura possível com Tempo ou Jaeger.
 
-### 📃 Logs estruturados com Loki
+### Logs estruturados com Loki
 - Logs gerados com `structured JSON` no `pedido-service`.
 - Enviados ao Loki e visualizados no Grafana.
 - Filtros por serviço, nível de log e trace ID.
 
----
 
-## 🧭 Orientações Técnicas para os Times
+
+## Orientações Técnicas para os Times
 
 ### Backend
 - Expandir novos casos de uso com base na Clean Architecture.
@@ -142,7 +151,7 @@ A arquitetura segue os princípios da **Clean Architecture** com separação em 
 
 ### Frontend
 - Criar SPA com autenticação Keycloak via PKCE.
-- Consumir API via Kong com token JWT.
+- Consumir API via BFF entregue pelo time de front com token JWT.
 - Painel de status e criação de pedido.
 
 ### Mobile
@@ -150,20 +159,27 @@ A arquitetura segue os princípios da **Clean Architecture** com separação em 
 - Criação e monitoramento de pedido.
 - Notificações push para mudança de status.
 
----
 
-## ✅ Testes
+
+## Testes
 
 - Testável via Postman ou curl.
 - Autenticação obrigatória via token válido.
-- Collection Postman disponível no projeto.
-- Execução do script auth-test.sh (autentica no Keyclock pegando token e executa um POST/GET em `pedido-servico`)
+- Collection Postman disponível no projeto para importação. Não precisa chamar antes a requisição do token, já está automatizado na rota de POST/GET. Para obter o token por 2FA necessita cadastrar o OTP no endereço mencionado acima e depois colocar o código no campo totp no body da requisição 
+- Execução do script auth-test.sh,  autentica no Keyclock pegando token e executa um POST/GET em `pedido-servico`
 ```bash
 ./auth-test.sh
 ```
----
+- Execução do script auth-test-2FA.sh, verifica no Keyclock se usuário já efetuou o cadastro OTP, solicita o código gerando autenticando e pegando o token para execução de POST/GET em `pedido-servico`, caso contrário abre url com QRCode para cadastramento do OTP.
+```bash
+./auth-test-2FA.sh
+```
 
-![Diagrama C4](imagens/C4-Contexto.png)
+
+
+## Diagrama Solução
+![Diagrama C4](docs/imagens/Diagrama-Solucao.png)
+
 
 
 

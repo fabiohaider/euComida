@@ -6,7 +6,7 @@ REALM="eucomida"
 CLIENT_ID="pedido-service"
 ADMIN="admin"
 ADMIN_PASSWD="admin"
-USERNAME="cliente1"
+USERNAME="cliente2"
 PASSWORD="cliente123"
 ADMIN_CLIENT_ID="admin-cli"
 CLIENTE_ID_PARA_TESTE="c41b3f00-49e8-4cf7-8126-2872f243f10f"
@@ -21,7 +21,7 @@ print_header() {
 }
 
 print_header "1. Verificando se OTP está Cadastrado no Authenticator"
-echo "🔐 Obtendo token de Administrador..."
+echo "Obtendo token de Administrador..."
 
 TOKEN_ADMIN=$(curl -s \
   -X POST "${KEYCLOAK_HOST}/realms/master/protocol/openid-connect/token" \
@@ -34,11 +34,11 @@ TOKEN_ADMIN=$(curl -s \
 
 
 if [[ -z "$TOKEN_ADMIN" || "$TOKEN_ADMIN" == "null" ]]; then
-  echo "❌ Erro ao obter token de Administrador. Verifique usuário/senha e se o Keycloak está no ar."
+  echo "Erro ao obter token de Administrador. Verifique usuário/senha e se o Keycloak está no ar. ❌"
   exit 1
 fi
 
-echo "📋 Verificando usuário $USERNAME no realm '$REALM'..."
+echo "Verificando usuário $USERNAME no realm '$REALM'..."
 
 USERS=$(curl -s -H "Authorization: Bearer $TOKEN_ADMIN" "$KEYCLOAK_HOST/admin/realms/$REALM/users")
 
@@ -68,10 +68,10 @@ done < <(echo "$USERS" | jq -c '.[]')
 echo ""
 
 if [ "$STATUSOTP" == "Y" ]; then
-  echo "✅ $USERNAME Cadastrado no Authenticastor"
+  echo "$USERNAME Cadastrado no Authenticastor ✅"
   echo ""
 else
-  echo "❌ $USERNAME Precisa cadastro no OTP e Authenticator"
+  echo "$USERNAME Precisa cadastro no OTP e Authenticator ❌"
     echo ""
 fi
 
@@ -90,7 +90,7 @@ read -n 1 -s -r -p "Cadastre no Authenticator e pressione qualquer tecla para co
 echo
 
 print_header "2. Solicitando Token de Acesso (Keycloak)"
-echo "🔐 Para o usuário: $USERNAME..."
+echo "Para o usuário: $USERNAME..."
 echo ""
 
 read -p "Digite o código OTP: " TOTP
@@ -108,12 +108,12 @@ echo ""
 ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r .access_token)
 
 if [ "$ACCESS_TOKEN" == "null" ] || [ -z "$ACCESS_TOKEN" ]; then
-  echo "❌ Falha ao obter token. Resposta do Keycloak:"
+  echo "Falha ao obter token. Resposta do Keycloak: ❌"
   echo "$RESPONSE"
   exit 1
 fi
 
-echo "✅ Token obtido com sucesso!"
+echo "Token obtido com sucesso! ✅"
 
 print_header "3. Criando um Novo Pedido (POST /pedidos) Kong Gateway --> Pedido-Service"
 
@@ -127,18 +127,18 @@ HTTP_BODY=$(echo "$POST_RESPONSE" | sed '$d')
 HTTP_STATUS=$(echo "$POST_RESPONSE" | tail -n1 | cut -d: -f2)
 
 if [ "$HTTP_STATUS" -ne 201 ]; then
-    echo "❌ Falha ao criar o pedido. Status: $HTTP_STATUS"
+    echo "Falha ao criar o pedido. Status: $HTTP_STATUS ❌"
     echo "   Resposta: $HTTP_BODY"
     exit 1
 fi
 
 PEDIDO_ID=$(echo "$HTTP_BODY" | jq -r .id)
 
-echo "✅ Pedido criado com sucesso!"
+echo "Pedido criado com sucesso! ✅"
 echo "   ID do Pedido: $PEDIDO_ID"
 
 print_header "4. Consultando Status do Pedido Criado (GET /pedidos/{id}/status) Kong Gateway --> Pedido-Service"
-echo "🔎 Consultando o pedido com ID: ${PEDIDO_ID}..."
+echo "Consultando o pedido com ID: ${PEDIDO_ID}..."
 
 GET_RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
   -X GET "${API_HOST}/api/v1/pedidos/${PEDIDO_ID}/status" \
@@ -148,12 +148,13 @@ HTTP_BODY_GET=$(echo "$GET_RESPONSE" | sed '$d')
 HTTP_STATUS_GET=$(echo "$GET_RESPONSE" | tail -n1 | cut -d: -f2)
 
 if [ "$HTTP_STATUS_GET" -ne 200 ]; then
-    echo "❌ Falha ao consultar o status. Status: $HTTP_STATUS_GET"
+    echo "Falha ao consultar o status. Status: $HTTP_STATUS_GET ❌"
     echo "   Resposta: $HTTP_BODY_GET"
     exit 1
 fi
 
-echo "✅ Status consultado com sucesso!"
+echo "Status consultado com sucesso! ✅"
 echo "   Resposta (Status): $HTTP_BODY_GET"
 echo ""
-echo -e "\033[1;32m🎉  Script de teste de fluxo completo finalizado com sucesso!\033[0m"
+echo -e "\033[1;32mScript de teste de fluxo completo finalizado com sucesso! 🎉\033[0m"
+echo""

@@ -8,7 +8,7 @@ e adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 ---
 
 
-## [1.0.3] - 2025-06-30
+## [1.0.3] - 2025-06-29
 ### Adicionado
 - Organização de toda infraestrutura Docker Compose na pasta `infra`
 - Organização dos scripts utilitários na pasta `.script`

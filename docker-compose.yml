@@ -44,7 +44,7 @@ services:
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: postgres
     volumes:
-      - ./auth/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ./infra/auth/realm-export.json:/opt/keycloak/data/import/realm-export.json
     ports:
       - "8080:8080"
     network_mode: host
@@ -68,13 +68,13 @@ services:
       - "8001:8001"
     network_mode: host
     volumes:
-      - ./gateway/kong.yml:/usr/local/kong/declarative/kong.yml
+      - ./infra/gateway/kong.yml:/usr/local/kong/declarative/kong.yml
 
   prometheus:
     image: prom/prometheus
     container_name: prometheus
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./infra/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     network_mode: host
@@ -88,7 +88,7 @@ services:
     user: "0"
     command: [ "--config=/etc/otel/config.yaml" ]
     volumes:
-      - ./monitoring/otel-config.yaml:/etc/otel/config.yaml
+      - ./infra/monitoring/otel-config.yaml:/etc/otel/config.yaml
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
@@ -113,8 +113,8 @@ services:
       - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana;
-      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
-      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./infra/monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./infra/monitoring/grafana/dashboards:/var/lib/grafana/dashboards
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_NAME=Main Org.

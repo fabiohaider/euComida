@@ -43,8 +43,8 @@ Execute:
 ```bash
 git clone https://github.com/fabiohaider/euComida.git
 cd euComida
-./start-and-wait.sh
-./access-summary.sh
+./start-and-wait-docker.sh
+./access-summary-docker.sh
 ```
 
 Após a inicialização, os serviços estarão disponíveis em:

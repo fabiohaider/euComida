@@ -5,7 +5,7 @@ Este projeto implementa o backend de um sistema de delivery inspirado no iFood.
 ---
 
 
-[CHANGELOG](./docs/CHANGELOG/CHANGELOG.md)
+[CHANGELOG](doc/CHANGELOG/CHANGELOG.md)
 
 
 
@@ -178,7 +178,7 @@ A arquitetura segue os princípios da **Clean Architecture** com separação em 
 
 
 ## Diagrama Solução
-![Diagrama C4](docs/imagens/Diagrama-Solucao.png)
+![Diagrama C4](doc/imagens/Diagrama-Solucao.png)
 
 
 

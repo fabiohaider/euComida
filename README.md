@@ -1,9 +1,9 @@
-# euComida 🍽️
+# euComida
 
 Sistema backend de pedidos com autenticação 2FA, observabilidade e deploy containerizado.
 
 ![Versão](https://img.shields.io/badge/versão-1.0.3-blue)
-![Docker Ready](https://img.shields.io/badge/docker-compose-ready-green)
+![Docker](https://img.shields.io/badge/Docker-ready-blue)
 
 
 
